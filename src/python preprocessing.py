@@ -1,163 +1,111 @@
 import os
-import json
-import random
-import shutil
-from pathlib import Path
-from tqdm import tqdm
-import numpy as np  # (필요시 데이터 분석용으로 남겨둘 수 있음)
-import pandas as pd # (필요시 데이터 분석용으로 남겨둘 수 있음)
+import glob
+import yaml # PyYAML 설치 필요: pip install pyyaml
 
 # --- 설정값 ---
-# 원본 데이터 경로
-path = os.getcwd()
-data_path = os.path.join(path, 'data')
-annotations_path = os.path.join(data_path, 'train_annotations')
-train_image_path = os.path.join(data_path, "train_images")
+# 이 스크립트는 'src' 폴더 내에서 실행되어야 합니다.
 
-# 결과물(YOLO 데이터셋) 경로
-OUTPUT_DIR = os.path.join(data_path, 'dataset_yolo')
-SPLIT_RATIO = 0.8
+# 1. 프로젝트 루트 경로 ('src' 폴더의 부모 폴더, 즉 'AI_TEAM2')
+PROJECT_ROOT = os.path.dirname(os.getcwd())
+
+# 2. YOLO 데이터셋 경로 (AI_TEAM2/images, AI_TEAM2/labels)
+IMG_DIR = os.path.join(PROJECT_ROOT, "images")
+LBL_DIR = os.path.join(PROJECT_ROOT, "labels")
+
+# 3. 생성될 data.yaml 파일 경로 (AI_TEAM2/data.yaml)
+OUTPUT_YAML_PATH = os.path.join(PROJECT_ROOT, "data.yaml")
 # ----------------
 
-def scan_json_files():
-    """주석 경로에서 모든 JSON 파일 스캔"""
-    json_path_list = []
-    first_level = os.listdir(annotations_path)
-    for second_level in first_level:
-        folder_path = os.path.join(annotations_path, second_level)
-        for third_level in os.listdir(folder_path):
-            medicine_path = os.path.join(folder_path, third_level)
-            for json_file in os.listdir(medicine_path):
-                json_path = os.path.join(medicine_path, json_file)
-                json_path_list.append(json_path)
-    return json_path_list
-
-def convert_bbox(bbox, img_w, img_h):
-    """COCO bbox(x, y, w, h) -> YOLO bbox(cx, cy, w, h) [normalized]"""
-    x, y, w, h = bbox
-    cx = (x + w / 2) / img_w
-    cy = (y + h / 2) / img_h
-    w_norm = w / img_w
-    h_norm = h / img_h
-    return cx, cy, w_norm, h_norm
-
-def read_json(p):
-    """JSON 파일 읽기"""
-    with open(p, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-def process_dataset():
-    """메인 전처리 함수"""
-    print("[시작] 데이터 변환 시작!")
-    json_path = scan_json_files()
-    print(f"[확인] JSON 파일 {len(json_path)}개 발견")
-
-    merged_annotations = []
-    merged_images = []
-    cat_seen = set()
-
-    for jp in tqdm(json_path, desc="JSON 파일 병합 중"):
-        data = read_json(jp)
-        for annotation in data["annotations"]:
-            merged_annotations.append(annotation)
-            cat_seen.add(annotation["category_id"])
-        for image in data["images"]:
-            # 원본 이미지 경로를 추적하기 위해 json_path의 디렉토리 저장 (사용은 안 함)
-            # image["json_path"] = os.path.dirname(jp) 
-            merged_images.append(image)
+def find_max_class_index(label_folders):
+    """주어진 라벨 폴더들에서 가장 큰 클래스 인덱스를 찾습니다."""
+    max_index = -1
+    files_scanned = 0
     
-    # 카테고리 매핑 생성
-    category_list = sorted(list(cat_seen))
-    category_mapping = {cat_id : idx for idx, cat_id in enumerate(category_list)}
-    
-    # 이미지 ID를 기준으로 주석 그룹화 (빠른 탐색용)
-    annotation_by_image_id = {}
-    for annotation in merged_annotations:
-        image_id = annotation["image_id"]
-        if image_id not in annotation_by_image_id:
-            annotation_by_image_id[image_id] = []
-        annotation_by_image_id[image_id].append(annotation)
-
-    # YOLO 데이터셋 폴더 생성
-    img_train_dir = os.path.join(OUTPUT_DIR, "images/train")
-    lbl_train_dir = os.path.join(OUTPUT_DIR, "labels/train")
-    img_val_dir = os.path.join(OUTPUT_DIR, "images/val")
-    lbl_val_dir = os.path.join(OUTPUT_DIR, "labels/val")
-    
-    for p in [img_train_dir, lbl_train_dir, img_val_dir, lbl_val_dir]:
-        os.makedirs(p, exist_ok=True)
-
-    # Train / Validation 분할
-    random.seed(42)
-    random.shuffle(merged_images)
-    split_len = int(len(merged_images) * SPLIT_RATIO)
-    train_images = merged_images[:split_len]
-    val_images = merged_images[split_len:]
-    print(f"[INFO] Train: {len(train_images)} 장, Val: {len(val_images)} 장")
-
-    # Train 데이터셋 처리
-    print("Train 데이터셋 변환 중...")
-    for img in tqdm(train_images):
-        img_name = img["file_name"]
-        img_id = img["id"]
-        img_w, img_h = img["width"], img["height"]
+    print("라벨 파일 스캔 중 (클래스 개수 파악)...")
+    for folder in label_folders:
+        if not os.path.exists(folder):
+            print(f"[경고] 라벨 폴더 없음: {folder}")
+            continue
+            
+        # glob.glob으로 폴더 내 모든 .txt 파일 경로 가져오기
+        label_files = glob.glob(os.path.join(folder, '*.txt'))
+        files_scanned += len(label_files)
         
-        # 1. 이미지 복사
-        src_img_path = os.path.join(train_image_path, img_name)
-        dst_img_path = os.path.join(img_train_dir, img_name)
-        shutil.copy(src_img_path, dst_img_path)
+        for file_path in label_files:
+            try:
+                with open(file_path, 'r') as f:
+                    lines = f.readlines()
+                    for line in lines:
+                        parts = line.strip().split()
+                        if len(parts) > 0:
+                            class_index = int(parts[0])
+                            if class_index > max_index:
+                                max_index = class_index
+            except Exception as e:
+                print(f"[오류] 파일 읽기 실패 {file_path}: {e}")
+                
+    print(f"총 {files_scanned}개의 라벨 파일 스캔 완료.")
+    return max_index
 
-        # 2. 라벨 파일 생성
-        if img_id in annotation_by_image_id:
-            txt_name = img_name.replace(os.path.splitext(img_name)[1], ".txt")
-            with open(os.path.join(lbl_train_dir, txt_name), "w") as f:
-                for ann in annotation_by_image_id[img_id]:
-                    cls_id = category_mapping[ann["category_id"]]
-                    bbox_yolo = convert_bbox(ann["bbox"], img_w, img_h)
-                    f.write(f"{cls_id} {bbox_yolo[0]:.6f} {bbox_yolo[1]:.6f} {bbox_yolo[2]:.6f} {bbox_yolo[3]:.6f}\n")
-
-    # Validation 데이터셋 처리
-    print("Validation 데이터셋 변환 중...")
-    for img in tqdm(val_images):
-        img_name = img["file_name"]
-        img_id = img["id"]
-        img_w, img_h = img["width"], img["height"]
-
-        # 1. 이미지 복사
-        src_img_path = os.path.join(train_image_path, img_name)
-        dst_img_path = os.path.join(img_val_dir, img_name)
-        shutil.copy(src_img_path, dst_img_path)
-
-        # 2. 라벨 파일 생성
-        if img_id in annotation_by_image_id:
-            txt_name = img_name.replace(os.path.splitext(img_name)[1], ".txt")
-            with open(os.path.join(lbl_val_dir, txt_name), "w") as f:
-                for ann in annotation_by_image_id[img_id]:
-                    cls_id = category_mapping[ann["category_id"]]
-                    bbox_yolo = convert_bbox(ann["bbox"], img_w, img_h)
-                    f.write(f"{cls_id} {bbox_yolo[0]:.6f} {bbox_yolo[1]:.6f} {bbox_yolo[2]:.6f} {bbox_yolo[3]:.6f}\n")
-
-    # data.yaml 파일 생성 (가장 중요!)
-    yaml_path = os.path.join(OUTPUT_DIR, "data.yaml")
-    with open(yaml_path, "w", encoding="utf-8") as f:
-        # path는 data.yaml 파일 기준 상대 경로 또는 절대 경로
-        # 여기서는 절대 경로를 사용
-        f.write(f"path: {OUTPUT_DIR}\n") 
-        f.write("train: images/train\n")
-        f.write("val: images/val\n")
-        f.write("\n")
-        f.write("names:\n")
-        for k, v in category_mapping.items():
-            f.write(f"  {v}: class_{k}\n") # 클래스 이름을 "class_ID"로 저장
-
-    print(f"[완료] 변환 완료 → {OUTPUT_DIR}")
-    print(f"[생성] data.yaml → {yaml_path}")
+def create_data_yaml():
+    """기존 데이터셋 구조를 바탕으로 data.yaml 파일을 생성합니다."""
     
-    # category_reverse_mapping은 train.py에서 필요 없음
-    # yaml 파일이 그 역할을 대신함
+    train_img_path = os.path.join(IMG_DIR, "train")
+    val_img_path = os.path.join(IMG_DIR, "val")
+    train_lbl_path = os.path.join(LBL_DIR, "train")
+    val_lbl_path = os.path.join(LBL_DIR, "val")
+
+    # 1. 필수 폴더 존재 확인
+    if not os.path.exists(train_img_path):
+        print(f"[오류] Train 이미지 폴더 없음: {train_img_path}")
+        return
+    if not os.path.exists(val_img_path):
+         print(f"[오류] Val 이미지 폴더 없음: {val_img_path}")
+         return
+    if not os.path.exists(train_lbl_path):
+         print(f"[경고] Train 라벨 폴더 없음: {train_lbl_path} (클래스 개수 파악에 영향)")
+    if not os.path.exists(val_lbl_path):
+         print(f"[경고] Val 라벨 폴더 없음: {val_lbl_path} (클래스 개수 파악에 영향)")
+
+    # 2. 라벨 파일 스캔하여 클래스 개수(nc) 결정
+    max_class_index = find_max_class_index([train_lbl_path, val_lbl_path])
+    
+    if max_class_index == -1:
+        print("[오류] 라벨 파일에서 클래스 인덱스를 찾을 수 없습니다. 라벨 파일 형식을 확인하세요.")
+        print("       (형식 예: 0 0.5 0.5 0.2 0.2)")
+        nc = 0 # 클래스를 찾지 못함
+    else:
+        nc = max_class_index + 1 # 인덱스는 0부터 시작하므로 +1
+        print(f"가장 큰 클래스 인덱스: {max_class_index} -> 총 클래스 개수(nc): {nc}")
+
+    # 3. 임시 클래스 이름 생성 (⚠️ 반드시 수동으로 수정 필요!)
+    class_names = [f'class_{i}' for i in range(nc)]
+
+    # 4. YAML 데이터 구조 생성
+    data = {
+        'path': PROJECT_ROOT,  # 데이터셋 루트 경로 (AI_TEAM2 폴더)
+        'train': os.path.relpath(train_img_path, PROJECT_ROOT), # 루트 기준 상대경로 (images/train)
+        'val': os.path.relpath(val_img_path, PROJECT_ROOT),     # 루트 기준 상대경로 (images/val)
+        'nc': nc,
+        'names': class_names
+    }
+
+    # 5. YAML 파일 쓰기
+    try:
+        with open(OUTPUT_YAML_PATH, 'w', encoding='utf-8') as f:
+            yaml.dump(data, f, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        print(f"[성공] data.yaml 파일 생성 완료: {OUTPUT_YAML_PATH}")
+        print("\n" + "="*30)
+        print("⚠️ 중요: 생성된 data.yaml 파일을 열어서")
+        print("   'names:' 항목 아래의 클래스 이름들을")
+        print("   실제 알약 이름으로 *반드시* 수정해주세요!")
+        print("="*30)
+        
+    except Exception as e:
+        print(f"[오류] data.yaml 파일 쓰기 실패: {e}")
 
 
 if __name__ == "__main__":
-    print("=== 데이터 전처리 프로그램 시작 ===")
-    process_dataset()
-    print("=== 데이터 전처리 프로그램 종료 ===")
+    print("=== data.yaml 생성 프로그램 시작 ===")
+    create_data_yaml()
+    print("=== data.yaml 생성 프로그램 종료 ===")
