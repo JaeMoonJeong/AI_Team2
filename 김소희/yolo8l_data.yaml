@@ -1,4 +1,4 @@
-path: .
+path: C:/Users/wockd/OneDrive/바탕 화면/말하는 감자/스프린트/혼자테스트/data/dataset_yolo
 train: images/train
 val: images/val
 names:
