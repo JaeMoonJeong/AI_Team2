@@ -2,7 +2,7 @@
 # YOLO 학습을 위한 데이터셋 설정 파일
 # 경로: /content/drive/MyDrive/데이터_인프런/AI프로젝트_2팀/DATASET_YOLO_v1
 
-# path: /content/drive/MyDrive/데이터_인프런/AI프로젝트_2팀/DATASET_YOLO_v1  # 데이터셋 루트 디렉토리 (절대 경로)
+path: ../content/drive/MyDrive/데이터_인프런/AI프로젝트_2팀/DATASET_YOLO_v1  # 데이터셋 루트 디렉토리 (절대 경로)
 train: images/train  # train 이미지 폴더
 val: images/val      # val 이미지 폴더
 
