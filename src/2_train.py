@@ -9,7 +9,7 @@ def main():
 
     # 2. 데이터셋 YAML 파일 경로
     # 당신이 만든 data.yaml 파일의 절대 경로 또는 상대 경로를 지정합니다.
-    data_yaml_path = './data.yaml'
+    data_yaml_path = '../data.yaml'
 
     # 3. 모델 학습
     # epochs: 전체 데이터셋을 몇 번 반복 학습할지 (예: 100)
@@ -18,11 +18,11 @@ def main():
     print("Starting model training...")
     results = model.train(
         data=data_yaml_path,
-        epochs=100,
+        epochs=50,
         imgsz=640,
         batch=16,
         name='pill_detection_yolov8s', # 학습 결과가 저장될 폴더 이름
-        device='mps'  # <-- ★★★ M2 Max GPU 사용 (정재문 전용) ★★★
+        device='mps'  # <-- ★★★ apple GPU 사용 (정재문 전용) ★★★
     )
     
     print("Training complete.")
