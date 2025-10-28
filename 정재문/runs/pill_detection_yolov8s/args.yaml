@@ -1,7 +1,7 @@
 task: detect
 mode: train
 model: yolov8s.pt
-data: ../data.yaml
+data: data.yaml
 epochs: 50
 time: null
 patience: 100
@@ -12,8 +12,8 @@ save_period: -1
 cache: false
 device: mps
 workers: 8
-project: null
-name: pill_detection_yolov8s2
+project: ./정재문/runs
+name: pill_detection_yolov8s
 exist_ok: false
 pretrained: true
 optimizer: auto
@@ -104,4 +104,4 @@ erasing: 0.4
 cfg: null
 tracker: botsort.yaml
 save_dir: /Users/moon/My Drive/00. MIT/07. Artifical Intelligence/250807_AI 강의/06.
-  팀과제 2/AI_Team2/src/runs/detect/pill_detection_yolov8s2
+  팀과제/AI_team2/정재문/runs/pill_detection_yolov8s
