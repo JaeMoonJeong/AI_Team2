@@ -1,5 +1,5 @@
 path: /Users/moon/My Drive/00. MIT/07. Artifical Intelligence/250807_AI 강의/06.
-  팀과제/AI_team2/preprocess_af
+  팀과제 2/AI_team2/preprocess_af
 train: images/train
 val: images/val
 nc: 73
