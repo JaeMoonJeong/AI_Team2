@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import glob  # 파일/폴더 검색을 위한 라이브러리
 import os    # 파일/폴더 정보를 다루기 위한 라이브러리
 
-def get_latest_run_directory(base_dir="./runs/detect/"):
+def get_latest_run_directory(base_dir="./runs/"):
     """
     base_dir(기본 검색 경로) 안에서 가장 최근에 수정된 폴더(run)의
     경로를 찾아서 반환합니다.
@@ -36,6 +36,11 @@ def main():
     # 2_train.py에서 사용한 것과 동일한 경로
     data_yaml_path = './data.yaml'
 
+    # 1. 상위 프로젝트 폴더: project_dir = "./정재문/runs/"
+    project_dir = os.path.dirname(latest_run_dir.rstrip('/'))
+    # 2. 현재 학습 이름: run_name = "pill_detection_yolov8s"
+    run_name = os.path.basename(latest_run_dir.rstrip('/'))
+
     # 3. 학습된 모델 로드
     print(f"Loading trained model from: {trained_model_path}")
     model = YOLO(trained_model_path)
@@ -46,7 +51,9 @@ def main():
     metrics = model.val(
         data=data_yaml_path,
         device='mps',  # M2 Max GPU 사용
-        split='val'    # Validation set 사용 명시
+        split='val',    # Validation set 사용 명시
+        project=latest_run_dir,
+        name='evaluation'
     )
     
     # 5. ★★★ mAP 값 추출 및 출력 ★★★
