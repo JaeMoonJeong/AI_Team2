@@ -7,14 +7,17 @@
 
 # --- 1. 핵심 AI/ML (PyTorch) ---
 # ※주의: PyTorch는 GPU(CUDA) 버전에 맞게 설치해야 함. 두개 중에 지원님 주용님께 맞춰 진행.
+
 # (예: CUDA 11.8 사용 시)
-torch==2.8.0+cu126
-torchvision==0.23.0+cu126
+# torch==2.8.0+cu126
+# torchvision==0.23.0+cu126
 # torchaudio==2.1.0+cu118
 # (CPU 전용일 경우 아래 주석 해제)
-torch==2.8.0
-torchvision==0.23.0
+# torch==2.8.0
+# torchvision==0.23.0
 # torchaudio==2.1.0
+
+ultralytics==8.3.219
 
 # --- 2. 데이터 핸들링 ---
 pandas==2.2.2
