@@ -12,7 +12,7 @@
 | :--- | :--- | :--- |
 | 황정석 | Project Manager (PM) | [@github_id](https://github.com/github_id) |
 | 유주용 | Data Engineer | [@github_id](https://github.com/github_id) |
-| 박지원 | Data Engineer | https://www.notion.so/29202918343a804f95abf333a3ff0b00?source=copy_link |
+| 박지원 | Data Engineer | [@notion_id](https://www.notion.so/29202918343a804f95abf333a3ff0b00?source=copy_link) |
 | 김소희 | Model Architect | [@github_id](https://github.com/github_id) |
 | 정재문 | Experimentation Lead | [@notion_id](https://www.notion.so/01-2a0979eab5998069941ef16fd8906e78?source=copy_link) |
 
@@ -51,6 +51,6 @@
 
 ## 🔗 5. 중요 링크 (Links)
 -   **Git-hub:** [[링크 삽입](https://github.com/hellomoomoo/AI_team2)]
--   **최종 보고서:** [링크 삽입] (발표 자료 PDF 등)
+-   **최종 보고서:** [최종 보고서 다운로드 (PDF)](./2팀_프로젝트_최종_보고서(20251104))
 -   **팀 협업 일지:** [[링크 삽입](https://docs.google.com/spreadsheets/d/1n-HrwpCrhgHbus7E9tyskF-FPI_-JypzhF5EQxgOLuc/edit?gid=0#gid=0)] 
 -   **Kaggle 경진대회:** [링크 삽입] ([Private Competition 주소](https://www.kaggle.com/competitions/ai05-level1-project/data))# AI_Team2
