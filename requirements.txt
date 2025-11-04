@@ -16,6 +16,10 @@
 # torch==2.8.0
 # torchvision==0.23.0
 # torchaudio==2.1.0
+# (pip freeze에서 추출한 버전 - 재문)
+ultralytics==8.3.219
+matplotlib==3.10.0
+opencv-python-headless==4.10.0.84
 
 ultralytics==8.3.219
 
