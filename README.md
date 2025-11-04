@@ -12,7 +12,7 @@
 | :--- | :--- | :--- |
 | 황정석 | Project Manager (PM) | [@github_id](https://github.com/github_id) |
 | 유주용 | Data Engineer | [@github_id](https://github.com/github_id) |
-| 박지원 | Data Engineer | [@github_id](https://github.com/github_id) |
+| 박지원 | Data Engineer | https://www.notion.so/29202918343a804f95abf333a3ff0b00?source=copy_link |
 | 김소희 | Model Architect | [@github_id](https://github.com/github_id) |
 | 정재문 | Experimentation Lead | [@notion_id](https://www.notion.so/01-2a0979eab5998069941ef16fd8906e78?source=copy_link) |
 
