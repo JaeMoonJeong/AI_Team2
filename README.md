@@ -13,7 +13,7 @@
 | 황정석 | Project Manager (PM) | [@github_id](https://github.com/github_id) |
 | 유주용 | Data Engineer | [@github_id](https://github.com/github_id) |
 | 박지원 | Data Engineer | [@notion_id](https://www.notion.so/29202918343a804f95abf333a3ff0b00?source=copy_link) |
-| 김소희 | Model Architect | [@github_id](https://github.com/github_id) |
+| 김소희 | Model Architect | [@github_id](https://github.com/github_id) https://velog.io/@moomoo_1357/%EC%B4%88%EA%B8%89-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%98%91%EC%97%85%EC%9D%BC%EC%A7%80%EC%B5%9C%EC%A2%85-%EC%A0%95%EB%A6%AC%EB%B3%B8 |
 | 정재문 | Experimentation Lead | [@notion_id](https://www.notion.so/01-2a0979eab5998069941ef16fd8906e78?source=copy_link) |
 
 <br>
