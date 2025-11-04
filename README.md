@@ -51,6 +51,6 @@
 
 ## 🔗 5. 중요 링크 (Links)
 -   **Git-hub:** [[링크 삽입](https://github.com/hellomoomoo/AI_team2)]
--   **최종 보고서:** [최종 보고서 다운로드 (PDF)](./2팀_프로젝트_최종_보고서(20251104))
+-   **최종 보고서:** [최종 보고서 다운로드 (PDF)](./2팀_프로젝트_최종_보고서(20251104).pdf)
 -   **팀 협업 일지:** [[링크 삽입](https://docs.google.com/spreadsheets/d/1n-HrwpCrhgHbus7E9tyskF-FPI_-JypzhF5EQxgOLuc/edit?gid=0#gid=0)] 
 -   **Kaggle 경진대회:** [링크 삽입] ([Private Competition 주소](https://www.kaggle.com/competitions/ai05-level1-project/data))# AI_Team2
