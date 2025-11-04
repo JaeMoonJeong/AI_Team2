@@ -10,7 +10,7 @@
 
 | 이름 | 역할 | 협업일지 |
 | :--- | :--- | :--- |
-| 황정석 | Project Manager (PM) | [@github_id](https://github.com/github_id) |
+| 황정석 | Project Manager (PM) | [@notion_id](https://www.notion.so/Daily-2a15e9037c0d80fa8615d5ff006b0643?source=copy_link) |
 | 유주용 | Data Engineer | [@github_id](https://github.com/github_id) |
 | 박지원 | Data Engineer | [@notion_id](https://www.notion.so/29202918343a804f95abf333a3ff0b00?source=copy_link) |
 | 김소희 | Model Architect | [@velog](https://velog.io/@moomoo_1357/%EC%B4%88%EA%B8%89-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%98%91%EC%97%85%EC%9D%BC%EC%A7%80%EC%B5%9C%EC%A2%85-%EC%A0%95%EB%A6%AC%EB%B3%B8) |
