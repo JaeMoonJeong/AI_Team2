@@ -31,7 +31,7 @@
 -   **Language:** `Python 3.11`
 -   **Core Library:** `PyTorch`
 -   **Data Handling:** `Pandas`, `NumPy`
--   **Image Processing:** `OpenCV`, `Pillow`
+-   **Image Processing:** `Roboflow`
 -   **Collaboration:** `Git`, `GitHub`
 -   **Code Quality:** `Black`, `Flake8`
 
