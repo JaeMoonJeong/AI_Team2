@@ -31,8 +31,8 @@
 -   **Language:** `Python 3.11`
 -   **Core Library:** `PyTorch`
 -   **Data Handling:** `Pandas`, `NumPy`
--   **Image Processing:** `OpenCV`, `Pillow`
--   **Collaboration:** `Git`, `GitHub`
+-   **Image Processing:** `RoboFlow`
+-   **Collaboration:** `Git`, `GitHub`, `Google Drive`
 -   **Code Quality:** `Black`, `Flake8`
 
 <br>
